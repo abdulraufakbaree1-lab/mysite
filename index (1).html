@@ -1,0 +1,1906 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>SCIMS - Member Management System</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Tahoma, Arial, sans-serif;
+    background: #f1f5f9;
+    color: #1e293b;
+}
+
+button,
+input,
+textarea,
+select {
+    font-family: inherit;
+}
+
+button {
+    border: none;
+    cursor: pointer;
+    transition: .2s;
+}
+
+button:hover {
+    opacity: .9;
+    transform: translateY(-1px);
+}
+
+/* =========================
+   LOGIN
+========================= */
+
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #075985,
+            #0284c7
+        );
+}
+
+.login-box {
+    width: 100%;
+    max-width: 420px;
+    background: white;
+    padding: 35px;
+    border-radius: 18px;
+
+    box-shadow:
+        0 15px 40px
+        rgba(0, 0, 0, .20);
+
+    text-align: center;
+}
+
+.login-logo {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 15px;
+    border-radius: 50%;
+    background: #e0f2fe;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 38px;
+}
+
+.login-box h1 {
+    color: #075985;
+    margin-bottom: 10px;
+}
+
+.login-box p {
+    color: #64748b;
+    margin-bottom: 25px;
+}
+
+/* =========================
+   INPUTS
+========================= */
+
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: bold;
+    color: #334155;
+}
+
+input,
+textarea,
+select {
+    width: 100%;
+    padding: 11px;
+    border: 1px solid #cbd5e1;
+    border-radius: 7px;
+    font-size: 14px;
+    background: white;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+    outline: none;
+    border-color: #0284c7;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(2, 132, 199, .10);
+}
+
+textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+input:disabled,
+textarea:disabled,
+select:disabled {
+    background: #f1f5f9;
+    color: #64748b;
+    cursor: not-allowed;
+}
+
+/* =========================
+   BUTTONS
+========================= */
+
+button {
+    padding: 11px 18px;
+    border-radius: 7px;
+    font-weight: bold;
+}
+
+.btn-primary {
+    background: #0284c7;
+    color: white;
+}
+
+.btn-success {
+    background: #16a34a;
+    color: white;
+}
+
+.btn-danger {
+    background: #dc2626;
+    color: white;
+}
+
+.btn-secondary {
+    background: #64748b;
+    color: white;
+}
+
+.btn-warning {
+    background: #d97706;
+    color: white;
+}
+
+.btn-full {
+    width: 100%;
+}
+
+.btn-view {
+    background: #475569;
+    color: white;
+}
+
+/* =========================
+   APPLICATION
+========================= */
+
+.app {
+    display: none;
+    min-height: 100vh;
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.header {
+    background: #075985;
+    color: white;
+    padding: 15px 25px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-title {
+    font-size: 21px;
+    font-weight: bold;
+}
+
+.header-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.header-user span {
+    font-size: 14px;
+}
+
+/* =========================
+   LAYOUT
+========================= */
+
+.layout {
+    display: flex;
+    min-height: calc(100vh - 65px);
+}
+
+/* =========================
+   SIDEBAR
+========================= */
+
+.sidebar {
+    width: 240px;
+    background: #0f172a;
+    color: white;
+    padding: 20px 10px;
+    flex-shrink: 0;
+}
+
+.sidebar button {
+    display: block;
+    width: 100%;
+    text-align: left;
+
+    background: transparent;
+    color: #cbd5e1;
+
+    margin-bottom: 5px;
+    padding: 13px;
+}
+
+.sidebar button:hover,
+.sidebar button.active {
+    background: #075985;
+    color: white;
+}
+
+/* =========================
+   CONTENT
+========================= */
+
+.content {
+    flex: 1;
+    padding: 25px;
+    max-width: 1600px;
+    margin: auto;
+    width: 100%;
+}
+
+.page {
+    display: none;
+}
+
+.page.active {
+    display: block;
+}
+
+.page-title {
+    color: #075985;
+    margin-top: 0;
+}
+
+/* =========================
+   CARDS
+========================= */
+
+.cards {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(200px, 1fr)
+        );
+
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+
+    box-shadow:
+        0 3px 12px
+        rgba(0, 0, 0, .07);
+}
+
+.card-title {
+    color: #64748b;
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.card-value {
+    font-size: 28px;
+    font-weight: bold;
+    color: #075985;
+}
+
+/* =========================
+   FORM
+========================= */
+
+.form-card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+
+    box-shadow:
+        0 3px 12px
+        rgba(0, 0, 0, .07);
+
+    margin-bottom: 25px;
+}
+
+.form-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(230px, 1fr)
+        );
+
+    gap: 15px;
+}
+
+.full-width {
+    grid-column: 1 / -1;
+}
+
+/* =========================
+   PAYMENT GRID
+========================= */
+
+.payment-section {
+    margin-top: 25px;
+    padding: 20px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+}
+
+.payment-section h3 {
+    margin-top: 0;
+    color: #075985;
+}
+
+.payment-year-box {
+    max-width: 200px;
+    margin-bottom: 20px;
+}
+
+.payment-grid {
+    display: grid;
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(150px, 1fr)
+        );
+
+    gap: 12px;
+}
+
+.month-box {
+    background: white;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 12px;
+}
+
+.month-box label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #334155;
+}
+
+.month-box input {
+    width: 100%;
+}
+
+.payment-total {
+    margin-top: 18px;
+    padding: 15px;
+    background: #e0f2fe;
+    border-left: 5px solid #0284c7;
+    border-radius: 7px;
+
+    font-size: 18px;
+    font-weight: bold;
+    color: #075985;
+}
+
+/* =========================
+   TABLE
+========================= */
+
+.table-card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+
+    box-shadow:
+        0 3px 12px
+        rgba(0, 0, 0, .07);
+}
+
+.table-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    gap: 15px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.search {
+    max-width: 300px;
+}
+
+.year-selector {
+    max-width: 150px;
+}
+
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1450px;
+}
+
+th,
+td {
+    padding: 10px;
+    border-bottom: 1px solid #e2e8f0;
+    text-align: left;
+}
+
+th {
+    background: #075985;
+    color: white;
+}
+
+tr:hover td {
+    background: #f8fafc;
+}
+
+td button {
+    margin: 2px;
+}
+
+/* =========================
+   PAYMENT STATUS
+========================= */
+
+.paid {
+    color: #166534;
+    background: #dcfce7;
+    padding: 4px 7px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.unpaid {
+    color: #991b1b;
+    background: #fee2e2;
+    padding: 4px 7px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+/* =========================
+   PHOTO
+========================= */
+
+.employee-photo {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #0284c7;
+    background: #e0f2fe;
+}
+
+.photo-large {
+    width: 130px;
+    height: 130px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 4px solid #0284c7;
+
+    display: block;
+    margin: 0 auto 20px;
+}
+
+/* =========================
+   PROFILE
+========================= */
+
+.profile {
+    max-width: 900px;
+    margin: auto;
+}
+
+.profile-card {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+
+    box-shadow:
+        0 5px 20px
+        rgba(0, 0, 0, .08);
+
+    text-align: center;
+}
+
+.profile-name {
+    color: #075985;
+    font-size: 25px;
+    margin-bottom: 20px;
+}
+
+.info-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(220px, 1fr)
+        );
+
+    gap: 12px;
+    text-align: left;
+}
+
+.info-item {
+    background: #f8fafc;
+    padding: 15px;
+    border-radius: 8px;
+
+    border-left:
+        4px solid #0284c7;
+}
+
+.info-label {
+    display: block;
+    color: #64748b;
+    font-size: 13px;
+    margin-bottom: 5px;
+}
+
+.info-value {
+    font-weight: bold;
+    color: #1e293b;
+}
+
+/* =========================
+   ALERT
+========================= */
+
+.alert {
+    padding: 12px 15px;
+    border-radius: 7px;
+    margin-bottom: 15px;
+    display: none;
+}
+
+.alert.success {
+    display: block;
+    background: #dcfce7;
+    color: #166534;
+}
+
+.alert.error {
+    display: block;
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+
+    background:
+        rgba(0, 0, 0, .55);
+
+    z-index: 500;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.modal-content {
+    max-width: 900px;
+    background: white;
+    margin: 50px auto;
+    padding: 25px;
+    border-radius: 15px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.close {
+    font-size: 25px;
+    cursor: pointer;
+    color: #64748b;
+}
+
+/* =========================
+   EMPTY
+========================= */
+
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: #64748b;
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 768px) {
+
+    .sidebar {
+        width: 70px;
+        padding: 10px 5px;
+    }
+
+    .sidebar button {
+        font-size: 0;
+        text-align: center;
+        padding: 14px 5px;
+    }
+
+    .sidebar button::first-letter {
+        font-size: 20px;
+    }
+
+    .content {
+        padding: 15px;
+    }
+
+    .header {
+        padding: 12px 15px;
+    }
+
+    .header-title {
+        font-size: 16px;
+    }
+
+    .header-user span {
+        display: none;
+    }
+
+    .login-box {
+        padding: 25px 20px;
+    }
+
+    .payment-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* =========================
+   PRINT
+========================= */
+
+@media print {
+
+    .header,
+    .sidebar,
+    .no-print {
+        display: none !important;
+    }
+
+    .layout {
+        display: block;
+    }
+
+    .content {
+        padding: 0;
+    }
+
+    .profile-card {
+        box-shadow: none;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- =========================================================
+     LOGIN
+========================================================= -->
+
+<div id="loginPage" class="login-container">
+
+    <div class="login-box">
+
+        <div class="login-logo">
+            👥
+        </div>
+
+        <h1>
+            SCIMS
+        </h1>
+
+        <p>
+            Please Enter Your Credential
+        </p>
+
+        <div id="loginAlert" class="alert"></div>
+
+        <form id="loginForm">
+
+            <div class="form-group">
+
+                <label>
+                    Username
+                </label>
+
+                <input
+                    type="text"
+                    id="loginUsername"
+                    required
+                    autocomplete="username"
+                >
+
+            </div>
+
+            <div class="form-group">
+
+                <label>
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="loginPassword"
+                    required
+                    autocomplete="current-password"
+                >
+
+            </div>
+
+            <button
+                type="submit"
+                class="btn-primary btn-full"
+            >
+                Enter
+            </button>
+
+        </form>
+
+        <div style="
+            margin-top:25px;
+            padding:15px;
+            background:#f8fafc;
+            border-radius:10px;
+            font-size:12px;
+            color:#64748b;
+        ">
+
+            <b> Copyright © 2026-2028, All rights reserved.</b>
+
+            <br><br>
+
+            Administrator:
+            <b>admin</b> /
+            <b>admin...</b>
+
+            <br><br>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     APPLICATION
+========================================================= -->
+
+<div id="app" class="app">
+
+<header class="header">
+
+    <div class="header-title">
+        Surkh Ab Community Management System
+    </div>
+
+    <div class="header-user">
+
+        <span id="currentUserName">
+            User
+        </span>
+
+        <button
+            class="btn-danger"
+            onclick="logout()"
+        >
+            Logout
+        </button>
+
+    </div>
+
+</header>
+
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+
+<aside id="sidebar" class="sidebar">
+
+    <button
+        class="active"
+        onclick="showPage('dashboardPage', this)"
+    >
+        🏠 Dashboard
+    </button>
+
+    <button
+        onclick="showPage('membersPage', this)"
+    >
+        👥 Members
+    </button>
+
+    <button
+        onclick="showPage('addMemberPage', this)"
+    >
+        ➕ Add Member
+    </button>
+
+    <button
+        onclick="showPage('profilePage', this)"
+    >
+        👤 My Information
+    </button>
+
+</aside>
+
+
+<!-- CONTENT -->
+
+<main class="content">
+
+<!-- =========================================================
+     DASHBOARD
+========================================================= -->
+
+<section
+    id="dashboardPage"
+    class="page active"
+>
+
+    <h1 class="page-title">
+        Dashboard
+    </h1>
+
+    <div class="form-card">
+
+        <div style="
+            max-width:200px;
+        ">
+
+            <label>
+                Payment Year
+            </label>
+
+            <select
+                id="dashboardYear"
+                onchange="updateDashboard()"
+            ></select>
+
+        </div>
+
+    </div>
+
+
+    <div class="cards">
+
+        <div class="card">
+
+            <div class="card-title">
+                Total Members
+            </div>
+
+            <div
+                id="totalMembers"
+                class="card-value"
+            >
+                0
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                Total Amount
+            </div>
+
+            <div
+                id="totalAmount"
+                class="card-value"
+            >
+                0 AF
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                Paid This Month
+            </div>
+
+            <div
+                id="currentMonthAmount"
+                class="card-value"
+            >
+                0 AF
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <div class="card-title">
+                Active Members
+            </div>
+
+            <div
+                id="activeMembers"
+                class="card-value"
+            >
+                0
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <div class="form-card">
+
+        <h2>
+            Surkh Ab Community Management System
+        </h2>
+
+        <p>
+            Manage members and record their monthly
+            payments by year.
+        </p>
+
+        <p>
+            Go to <b>Members</b> to view payment
+            totals or <b>Add Member</b> to create
+            a new member with monthly payments.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     MEMBERS
+========================================================= -->
+
+<section
+    id="membersPage"
+    class="page"
+>
+
+    <h1 class="page-title">
+        Member List
+    </h1>
+
+
+    <div class="table-card">
+
+        <div class="table-header">
+
+            <h3>
+                Members
+            </h3>
+
+            <div style="
+                display:flex;
+                gap:10px;
+                flex-wrap:wrap;
+            ">
+
+                <select
+                    id="membersYear"
+                    class="year-selector"
+                    onchange="renderMembers()"
+                ></select>
+
+                <input
+                    type="text"
+                    id="searchMember"
+                    class="search"
+                    placeholder="Search member..."
+                    oninput="renderMembers()"
+                >
+
+            </div>
+
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Photo
+                        </th>
+
+                        <th>
+                            ID No
+                        </th>
+
+                        <th>
+                            Full Name
+                        </th>
+
+                        <th>
+                            Last Name
+                        </th>
+
+                        <th>
+                            Father Name
+                        </th>
+
+                        <th>
+                            Job
+                        </th>
+
+                        <th>
+                            Joining Date
+                        </th>
+
+                        <th>
+                            Phone
+                        </th>
+
+                        <th>
+                            Email
+                        </th>
+
+                        <th>
+                            Monthly
+                        </th>
+
+                        <th>
+                            Yearly Total
+                        </th>
+
+                        <th>
+                            Address
+                        </th>
+
+                        <th>
+                            Actions
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+                <tbody id="membersTable"></tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     ADD MEMBER
+========================================================= -->
+
+<section
+    id="addMemberPage"
+    class="page"
+>
+
+    <h1 class="page-title">
+        Add New Member
+    </h1>
+
+
+    <div class="form-card">
+
+        <div
+            id="memberAlert"
+            class="alert"
+        ></div>
+
+
+        <form id="memberForm">
+
+            <div class="form-grid">
+
+                <div class="form-group">
+
+                    <label>
+                        ID Number
+                    </label>
+
+                    <input
+                        type="text"
+                        id="idNumber"
+                        placeholder="EMP 001"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Full Name *
+                    </label>
+
+                    <input
+                        type="text"
+                        id="fullName"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Last Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="lastName"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Father Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="fatherName"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Job
+                    </label>
+
+                    <input
+                        type="text"
+                        id="memberJob"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Joining Date
+                    </label>
+
+                    <input
+                        type="date"
+                        id="joiningDate"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Contact Number
+                    </label>
+
+                    <input
+                        type="text"
+                        id="phone"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Email
+                    </label>
+
+                    <input
+                        type="email"
+                        id="email"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Username *
+                    </label>
+
+                    <input
+                        type="text"
+                        id="username"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Password *
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="form-group full-width">
+
+                    <label>
+                        Address
+                    </label>
+
+                    <textarea
+                        id="address"
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-group full-width">
+
+                    <label>
+                        Member Photo
+                    </label>
+
+                    <input
+                        type="file"
+                        id="photo"
+                        accept="image/*"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <!-- PAYMENT SECTION -->
+
+            <div class="payment-section">
+
+                <h3>
+                    Monthly Payments
+                </h3>
+
+                <p>
+                    Select the year and enter the amount
+                    paid for each month.
+                </p>
+
+
+                <div class="payment-year-box">
+
+                    <label>
+                        Payment Year
+                    </label>
+
+                    <select
+                        id="addPaymentYear"
+                        onchange="updateAddPaymentTotal()"
+                    ></select>
+
+                </div>
+
+
+                <div
+                    id="addPaymentGrid"
+                    class="payment-grid"
+                ></div>
+
+
+                <div
+                    id="addPaymentTotal"
+                    class="payment-total"
+                >
+                    Yearly Total: 0 AF
+                </div>
+
+            </div>
+
+
+            <br>
+
+            <button
+                type="submit"
+                class="btn-success"
+            >
+                Create Member
+            </button>
+
+        </form>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     PROFILE
+========================================================= -->
+
+<section
+    id="profilePage"
+    class="page"
+>
+
+    <div class="profile">
+
+        <h1 class="page-title">
+            My Information
+        </h1>
+
+        <div
+            id="profileContent"
+            class="profile-card"
+        ></div>
+
+    </div>
+
+</section>
+
+</main>
+
+</div>
+
+</div>
+
+
+<!-- =========================================================
+     EDIT / VIEW MODAL
+========================================================= -->
+
+<div
+    id="editModal"
+    class="modal"
+>
+
+<div class="modal-content">
+
+<div class="modal-header">
+
+    <h2>
+        Edit Member
+    </h2>
+
+    <span
+        class="close"
+        onclick="closeModal()"
+    >
+        ×
+    </span>
+
+</div>
+
+
+<form id="editForm">
+
+<input
+    type="hidden"
+    id="editIndex"
+>
+
+
+<div class="form-grid">
+
+    <div class="form-group">
+
+        <label>
+            ID Number
+        </label>
+
+        <input
+            type="text"
+            id="editIdNumber"
+        >
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>
+            Full Name
+        </label>
+
+        <input
+            type="text"
+            id="editFullName"
+            required
+        >
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>
+            Last Name
+        </label>
+
+        <input
+            type="text"
+            id="editLastName"
+        >
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>
+            Father Name
+        </label>
+
+        <input
+            type="text"
+            id="editFatherName"
+        >
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>
+            Job
+        </label>
+
+        <input
+            type="text"
+            id="editJob"
+        >
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>
+            Joining Date
+        </label>
+
+        <input
+            type="date"
+            id="editJoiningDate"
+        >
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>
+            Phone
+        </label>
+
+        <input
+            type="text"
+            id="editPhone"
+        >
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>
+            Email
+        </label>
+
+        <input
+            type="email"
+            id="editEmail"
+        >
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>
+            Username
+        </label>
+
+        <input
+            type="text"
+            id="editUsername"
+            required
+        >
+
+    </div>
+
+
+    <div class="form-group">
+
+        <label>
+            New Password
+        </label>
+
+        <input
+            type="password"
+            id="editPassword"
+            minlength="4"
+            placeholder="Leave blank to keep current password"
+            autocomplete="new-password"
+        >
+
+    </div>
+
+
+    <div class="form-group full-width">
+
+        <label>
+            Address
+        </label>
+
+        <textarea
+            id="editAddress"
+        ></textarea>
+
+    </div>
+
+</div>
+
+
+<!-- EDIT PAYMENTS -->
+
+<div class="payment-section">
+
+    <h3>
+        Monthly Payments
+    </h3>
+
+
+    <div class="payment-year-box">
+
+        <label>
+            Payment Year
+        </label>
+
+        <select
+            id="editPaymentYear"
+            onchange="loadEditPayments()"
+        ></select>
+
+    </div>
+
+
+    <div
+        id="editPaymentGrid"
+        class="payment-grid"
+    ></div>
+
+
+    <div
+        id="editPaymentTotal"
+        class="payment-total"
+    >
+        Yearly Total: 0 AF
+    </div>
+
+</div>
+
+
+<br>
+
+
+<button
+    type="submit"
+    class="btn-primary"
+>
+    Save Changes
+</button>
+
+
+<button
+    type="button"
+    class="btn-secondary"
+    onclick="closeModal()"
+>
+    Cancel
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+
+<script>
+const MONTHS = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+let currentUser = null;
+let membersCache = [];
+
+async function api(action, data = {}, method = "POST") {
+    const options = { method, credentials: "same-origin", headers: {} };
+    if (method === "GET") {
+        const qs = new URLSearchParams({action, ...data});
+        options.headers = {"Accept":"application/json"};
+        const response = await fetch(`api.php?${qs.toString()}`, options);
+        return response.json();
+    }
+    options.headers["Content-Type"] = "application/json";
+    options.body = JSON.stringify({action, ...data});
+    const response = await fetch("api.php", options);
+    return response.json();
+}
+
+function esc(value) {
+    return String(value ?? "").replace(/[&<>'"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;","\"":"&quot;"}[c]));
+}
+function money(n) { return Number(n || 0).toLocaleString() + " AF"; }
+function currentYear() { return new Date().getFullYear(); }
+function getSelectedYear(id) { return Number(document.getElementById(id)?.value) || currentYear(); }
+function isAdmin() { return currentUser?.role === "admin"; }
+function isMember() { return currentUser?.role === "member"; }
+function getValue(id) { return document.getElementById(id)?.value?.trim() || ""; }
+
+function showAlert(id, message, type) {
+    const el = document.getElementById(id); if (!el) return;
+    el.textContent = message; el.className = "alert " + type;
+    setTimeout(() => { el.className = "alert"; }, 5000);
+}
+
+function populateYearSelectors() {
+    const ids = ["dashboardYear","membersYear","addPaymentYear","editPaymentYear"];
+    const y = currentYear();
+    const years = Array.from({length: 11}, (_,i) => y - 5 + i);
+    ids.forEach(id => {
+        const el = document.getElementById(id); if (!el) return;
+        const old = el.value || String(y);
+        el.innerHTML = years.map(v => `<option value="${v}">${v}</option>`).join("");
+        el.value = years.includes(Number(old)) ? old : String(y);
+    });
+}
+
+function renderPaymentGrid(containerId, payments = {}, year, readOnly = false) {
+    const container = document.getElementById(containerId); if (!container) return;
+    const values = payments || {};
+    container.innerHTML = MONTHS.map((m,i) => {
+        const month = i + 1;
+        return `<div class="month-box"><label>${m}</label><input class="payment-input" data-month="${month}" type="number" min="0" step="0.01" value="${esc(values[month] ?? 0)}" ${readOnly ? "disabled" : ""}></div>`;
+    }).join("");
+    container.querySelectorAll(".payment-input").forEach(input => input.addEventListener("input", () => updatePaymentTotal(containerId, containerId === "addPaymentGrid" ? "addPaymentTotal" : "editPaymentTotal")));
+    updatePaymentTotal(containerId, containerId === "addPaymentGrid" ? "addPaymentTotal" : "editPaymentTotal");
+}
+function readPaymentGrid(id) {
+    const out = {};
+    document.querySelectorAll(`#${id} .payment-input`).forEach(input => out[input.dataset.month] = Number(input.value) || 0);
+    return out;
+}
+function updatePaymentTotal(gridId,totalId) {
+    const total = Object.values(readPaymentGrid(gridId)).reduce((a,b)=>a+Number(b||0),0);
+    const el=document.getElementById(totalId); if(el) el.textContent=`Yearly Total: ${money(total)}`;
+}
+function updateAddPaymentTotal() { renderPaymentGrid("addPaymentGrid", readPaymentGrid("addPaymentGrid"), getSelectedYear("addPaymentYear"), false); }
+
+async function login(event) {
+    event.preventDefault();
+    const result = await api("login", {username:getValue("loginUsername"), password:document.getElementById("loginPassword").value});
+    if (!result.success) { showAlert("loginAlert", result.message, "error"); return; }
+    currentUser = result.user;
+    loginSuccess();
+}
+document.getElementById("loginForm").addEventListener("submit", login);
+
+async function loginSuccess() {
+    document.getElementById("loginPage").style.display="none";
+    document.getElementById("app").style.display="block";
+    document.getElementById("currentUserName").textContent=currentUser.name || currentUser.username;
+    setupInterface();
+}
+
+async function setupInterface() {
+    populateYearSelectors();
+    const buttons=document.getElementById("sidebar").querySelectorAll("button");
+    buttons.forEach(b=>b.style.display="none");
+    if (isAdmin()) {
+        buttons[0].style.display=buttons[1].style.display=buttons[2].style.display=buttons[3].style.display="block";
+        await renderMembers(); await updateDashboard(); showPage("dashboardPage",buttons[0]);
+        renderPaymentGrid("addPaymentGrid",{},currentYear(),false);
+    } else {
+        buttons[1].style.display=buttons[3].style.display="block";
+        await renderMembers(); showPage("membersPage",buttons[1]);
+        await renderProfile();
+    }
+}
+
+async function renderMembers() {
+    const result=await api("list_members",{year:getSelectedYear("membersYear")},"GET");
+    if(!result.success){showAlert("memberAlert",result.message,"error");return;}
+    membersCache=result.members||[];
+    const search=(document.getElementById("searchMember")?.value||"").toLowerCase().trim();
+    const filtered=membersCache.filter(m=>[m.id_number,m.full_name,m.last_name,m.father_name,m.job,m.joining_date,m.phone,m.email,m.address].join(" ").toLowerCase().includes(search));
+    const tbody=document.getElementById("membersTable");
+    if(!filtered.length){tbody.innerHTML=`<tr><td colspan="13" class="empty-state">No members found.</td></tr>`;return;}
+    tbody.innerHTML=filtered.map(m=>{
+        const photo=m.photo||`https://ui-avatars.com/api/?name=${encodeURIComponent(m.full_name)}&background=e0f2fe&color=075985`;
+        const actions=isAdmin()?`<button class="btn-primary" onclick="editMember(${m.id})">Edit</button><button class="btn-danger" onclick="deleteMember(${m.id})">Delete</button>`:`<button class="btn-view" onclick="viewMember(${m.id})">View</button>`;
+        return `<tr><td><img class="employee-photo" src="${esc(photo)}"></td><td>${esc(m.id_number)}</td><td>${esc(m.full_name)}</td><td>${esc(m.last_name)}</td><td>${esc(m.father_name)}</td><td>${esc(m.job)}</td><td>${esc(m.joining_date)}</td><td>${esc(m.phone)}</td><td>${esc(m.email)}</td><td>${money(m.monthly_amount)}</td><td>${money(m.yearly_total)}</td><td>${esc(m.address)}</td><td>${actions}</td></tr>`;
+    }).join("");
+}
+
+document.getElementById("searchMember")?.addEventListener("input",renderMembers);
+document.getElementById("membersYear")?.addEventListener("change",renderMembers);
+
+async function updateDashboard() {
+    if(!isAdmin()) return;
+    const r=await api("dashboard",{year:getSelectedYear("dashboardYear")},"GET");
+    if(!r.success)return;
+    document.getElementById("totalMembers").textContent=r.total_members;
+    document.getElementById("totalAmount").textContent=money(r.total_amount);
+    document.getElementById("currentMonthAmount").textContent=money(r.current_month_amount);
+    document.getElementById("activeMembers").textContent=r.active_members;
+}
+
+async function createMember(event) {
+    event.preventDefault(); if(!isAdmin())return;
+    const file=document.getElementById("photo").files[0];
+    let photo="";
+    if(file) photo=await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file);});
+    const result=await api("create_member",{
+        id_number:getValue("idNumber"),full_name:getValue("fullName"),last_name:getValue("lastName"),father_name:getValue("fatherName"),job:getValue("memberJob"),joining_date:getValue("joiningDate"),phone:getValue("phone"),email:getValue("email"),address:getValue("address"),username:getValue("username"),password:document.getElementById("password").value,photo,
+        payment_year:getSelectedYear("addPaymentYear"),payments:readPaymentGrid("addPaymentGrid")
+    });
+    if(!result.success){showAlert("memberAlert",result.message,"error");return;}
+    document.getElementById("memberForm").reset(); populateYearSelectors(); renderPaymentGrid("addPaymentGrid",{},currentYear(),false); showAlert("memberAlert","Member created successfully.","success"); await renderMembers(); await updateDashboard();
+}
+document.getElementById("memberForm").addEventListener("submit",createMember);
+
+async function editMember(id) {
+    if(!isAdmin())return;
+    const r=await api("get_member",{id},"GET"); if(!r.success){alert(r.message);return;}
+    fillEditForm(r.member,false); document.getElementById("editModal").style.display="block";
+}
+async function viewMember(id) {
+    const r=await api("get_member",{id},"GET"); if(!r.success){alert(r.message);return;}
+    fillEditForm(r.member,true); document.getElementById("editModal").style.display="block";
+}
+function fillEditForm(m,viewOnly) {
+    const map={editIndex:m.id,editIdNumber:m.id_number,editFullName:m.full_name,editLastName:m.last_name,editFatherName:m.father_name,editJob:m.job,editJoiningDate:m.joining_date,editPhone:m.phone,editEmail:m.email,editAddress:m.address,editUsername:m.username};
+    Object.entries(map).forEach(([id,v])=>{const e=document.getElementById(id);if(e)e.value=v??"";});
+    document.getElementById("editPassword").value="";
+    populateYearSelectors(); document.getElementById("editPaymentYear").value=String(currentYear());
+    renderPaymentGrid("editPaymentGrid",m.payments?.[currentYear()]||{},currentYear(),viewOnly);
+    document.querySelector("#editForm button[type='submit']").style.display=viewOnly?"none":"inline-block";
+    document.querySelector("#editModal .modal-header h2").textContent=viewOnly?"View Member":"Edit Member";
+    document.querySelectorAll("#editForm input, #editForm textarea, #editForm select").forEach(e=>{if(e.id!=="editPassword")e.disabled=viewOnly;});
+    document.getElementById("editPassword").disabled=viewOnly;
+    document.getElementById("editUsername").disabled=viewOnly;
+}
+async function loadEditPayments(){
+    const id=Number(document.getElementById("editIndex").value), year=getSelectedYear("editPaymentYear");
+    const r=await api("get_payments",{member_id:id,year},"GET"); if(r.success) renderPaymentGrid("editPaymentGrid",r.payments,year,!isAdmin());
+}
+
+document.getElementById("editForm").addEventListener("submit",async function(e){
+    e.preventDefault(); if(!isAdmin())return;
+    const id=Number(getValue("editIndex"));
+    const result=await api("update_member",{
+        id,id_number:getValue("editIdNumber"),full_name:getValue("editFullName"),last_name:getValue("editLastName"),father_name:getValue("editFatherName"),job:getValue("editJob"),joining_date:getValue("editJoiningDate"),phone:getValue("editPhone"),email:getValue("editEmail"),address:getValue("editAddress"),username:getValue("editUsername"),new_password:document.getElementById("editPassword").value,payment_year:getSelectedYear("editPaymentYear"),payments:readPaymentGrid("editPaymentGrid")
+    });
+    if(!result.success){alert(result.message);return;}
+    closeModal(); await renderMembers(); await updateDashboard(); alert("Member updated successfully.");
+});
+
+async function deleteMember(id){
+    if(!isAdmin())return;
+    const m=membersCache.find(x=>Number(x.id)===Number(id));
+    if(!m)return;
+    if(!confirm(`Delete member "${m.full_name}"? This will also delete their payments and login account.`))return;
+    const r=await api("delete_member",{id});
+    if(!r.success){alert(r.message);return;}
+    await renderMembers(); await updateDashboard();
+}
+
+function closeModal(){document.getElementById("editModal").style.display="none";}
+function showPage(pageId,button){document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));document.getElementById(pageId)?.classList.add("active");document.querySelectorAll(".sidebar button").forEach(b=>b.classList.remove("active"));button?.classList.add("active");if(pageId==="profilePage")renderProfile();}
+async function renderProfile(){
+    const r=await api("profile",{},"GET"); if(!r.success)return; const u=r.user;
+    document.getElementById("profileContent").innerHTML=`<img class="photo-large" src="${esc(u.photo||`https://ui-avatars.com/api/?name=${encodeURIComponent(u.full_name||u.username)}&background=e0f2fe&color=075985`)}"><div class="profile-name">${esc(u.full_name||u.username)}</div><div class="info-grid"><div class="info-item"><span class="info-label">Username</span><span class="info-value">${esc(u.username)}</span></div><div class="info-item"><span class="info-label">Role</span><span class="info-value">${esc(u.role)}</span></div><div class="info-item"><span class="info-label">Phone</span><span class="info-value">${esc(u.phone)}</span></div><div class="info-item"><span class="info-label">Email</span><span class="info-value">${esc(u.email)}</span></div><div class="info-item"><span class="info-label">Address</span><span class="info-value">${esc(u.address)}</span></div></div>`;
+}
+async function logout(){await api("logout");location.reload();}
+
+window.addEventListener("load",async()=>{
+    populateYearSelectors(); renderPaymentGrid("addPaymentGrid",{},currentYear(),false);
+    const r=await api("session",{},"GET"); if(r.success&&r.logged_in){currentUser=r.user;loginSuccess();}
+});
+</script>
+
+</body>
+</html>
